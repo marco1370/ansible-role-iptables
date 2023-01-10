@@ -1,0 +1,34 @@
+---
+- name: Ensure required packages are present
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: true
+    cache_valid_time: 3600
+    state: present
+  loop:
+    - iptables
+    - iptables-persistent
+
+- name: Ensure FLUSH_ON_STOP is set to flush mode
+  ansible.builtin.lineinfile:
+    path: /etc/default/netfilter-persistent
+    regexp: '^FLUSH_ON_STOP='
+    line: FLUSH_ON_STOP=1
+
+- name: Copy IPv4 iptables rules script into place
+  ansible.builtin.template:
+    src: rules.v4.j2
+    dest: /etc/iptables/rules.v4
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart netfilter-persistent
+
+- name: Copy IPv6 iptables rules script into place
+  ansible.builtin.template:
+    src: rules.v6.j2
+    dest: /etc/iptables/rules.v6
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart netfilter-persistent

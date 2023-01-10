@@ -1,0 +1,27 @@
+{{ ansible_managed | comment }}
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -i lo -j ACCEPT
+-A INPUT -p icmpv6 -j ACCEPT
+{% if ip6tables_filter_input_rules is defined and ip6tables_filter_input_rules | length > 0 %}
+{% for rule in ip6tables_filter_input_rules %}
+-A INPUT {{ rule }}
+{% endfor %}
+{% endif %}
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+{% if ip6tables_filter_block_all_inputs is defined and ip6tables_filter_block_all_inputs is true %}
+-A INPUT -j DROP
+{% endif %}
+{% if ip6tables_filter_forward_rules is defined and ip6tables_filter_forward_rules | length > 0 %}
+{% for rule in ip6tables_filter_forward_rules %}
+-A FORWARD {{ rule }}
+{% endfor %}
+{% endif %}
+{% if ip6tables_filter_output_rules is defined and ip6tables_filter_output_rules | length > 0 %}
+{% for rule in ip6tables_filter_output_rules %}
+-A OUTPUT {{ rule }}
+{% endfor %}
+{% endif %}
+COMMIT

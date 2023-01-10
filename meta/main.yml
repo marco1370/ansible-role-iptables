@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  role_name: iptables
+  namespace: iptables
+  author: Anthony Dieperink
+  description: Ansible role for deploying the iptables firewall
+  license: MIT
+  min_ansible_version: '2.9'
+
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - bullseye
+
+  galaxy_tags:
+    - iptables
+    - firewall

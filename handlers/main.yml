@@ -1,0 +1,6 @@
+---
+- name: Restart netfilter-persistent
+  ansible.builtin.service:
+    name: netfilter-persistent
+    state: restarted
+    enabled: true

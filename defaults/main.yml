@@ -1,0 +1,16 @@
+---
+iptables_filter_block_all_inputs: true
+ip6tables_filter_block_all_inputs: true
+
+iptables_filter_input_rules: []
+iptables_filter_forward_rules: []
+iptables_filter_output_rules: []
+
+iptables_nat_prerouting_rules: []
+iptables_nat_input_rules: []
+iptables_nat_output_rules: []
+iptables_nat_postrouting_rules: []
+
+ip6tables_filter_input_rules: []
+ip6tables_filter_forward_rules: []
+ip6tables_filter_output_rules: []

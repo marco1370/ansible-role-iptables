@@ -1,0 +1,53 @@
+{{ ansible_managed | comment }}
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -i lo -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+{% if iptables_filter_input_rules is defined and iptables_filter_input_rules | length > 0 %}
+{% for rule in iptables_filter_input_rules %}
+-A INPUT {{ rule }}
+{% endfor %}
+{% endif %}
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+{% if iptables_filter_block_all_inputs is defined and iptables_filter_block_all_inputs is true %}
+-A INPUT -j DROP
+{% endif %}
+{% if iptables_filter_forward_rules is defined and iptables_filter_forward_rules | length > 0 %}
+{% for rule in iptables_filter_forward_rules %}
+-A FORWARD {{ rule }}
+{% endfor %}
+{% endif %}
+{% if iptables_filter_output_rules is defined and iptables_filter_output_rules | length > 0 %}
+{% for rule in iptables_filter_output_rules %}
+-A OUTPUT {{ rule }}
+{% endfor %}
+{% endif %}
+COMMIT
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+{% if iptables_nat_prerouting_rules is defined and iptables_nat_prerouting_rules | length > 0 %}
+{% for rule in iptables_nat_prerouting_rules %}
+-A PREROUTING {{ rule }}
+{% endfor %}
+{% endif %}
+{% if iptables_nat_input_rules is defined and iptables_nat_input_rules | length > 0 %}
+{% for rule in iptables_nat_input_rules %}
+-A INPUT {{ rule }}
+{% endfor %}
+{% endif %}
+{% if iptables_nat_output_rules is defined and iptables_nat_output_rules | length > 0 %}
+{% for rule in iptables_nat_output_rules %}
+-A OUTPUT {{ rule }}
+{% endfor %}
+{% endif %}
+{% if iptables_nat_postrouting_rules is defined and iptables_nat_postrouting_rules | length > 0 %}
+{% for rule in iptables_nat_postrouting_rules %}
+-A POSTROUTING {{ rule }}
+{% endfor %}
+{% endif %}
+COMMIT
